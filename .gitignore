@@ -1,0 +1,6 @@
+.DS_Store
+.godot/
+build/
+export/
+*.tmp
+*.zip
