@@ -1,0 +1,21 @@
+; Engine configuration file.
+; S1 项目骨架。Autoload 段在 Task 4/5 追加，[gui] 主题段在 Task 2 追加。
+
+[application]
+
+config/name="AI真相调查局-幻觉侦探"
+config/description="单机离线 AI 事实调查解谜游戏（开发中）"
+run/main_scene="res://scenes/menu/main_menu.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
