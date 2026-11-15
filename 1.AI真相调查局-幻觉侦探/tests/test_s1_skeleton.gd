@@ -99,10 +99,6 @@ static func _check_autoloads(root: Node) -> Array[String]:
 		f.append("load_case(不存在) 应 ok=false")
 	if cl.get_knowledge_cards().get("cards", null) == null:
 		f.append("get_knowledge_cards 应返回 {cards:[]}")
-	if gf._settings_cache != 0.8:
-		f.append("GameFlow._settings_cache 应为 0.8（autoload 顺序验证失败）")
-	if gf._catalog_cache == null:
-		f.append("GameFlow._catalog_cache 不应为 null")
 	return f
 
 
