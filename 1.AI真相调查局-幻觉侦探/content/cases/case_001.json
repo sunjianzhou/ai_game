@@ -1,0 +1,178 @@
+{
+  "schema_version": 2,
+  "case_id": "case_001",
+  "title": "不存在的引用",
+  "difficulty": "easy",
+  "order": 1,
+  "as_of": "2026-11-14",
+  "briefing": "星港城市博物馆准备发布一份展览事故说明。ORION 生成了内部报告，声称展品 A-17 在 11 月 13 日晚 19:42 被移至展厅 C，并援引编号 TR-204 的调拨单。你的任务是审查这份报告，判断其中的陈述是否可信。",
+  "objectives": ["识别报告里看似规范但实际不存在的引用", "区分'缺乏证据'与'证据矛盾'"],
+  "fiction_note": "本案为虚构案例，ORION 为虚构 AI 助手，不代表真实模型行为。",
+  "report": {
+    "segments": [
+      { "type": "narration", "text": "关于 11 月 13 日晚展品 A-17 的位置，经核查档案，结论如下：" },
+      { "type": "claim", "claim_id": "claim_001" },
+      { "type": "narration", "text": "该次移动已履行内部审批手续，" },
+      { "type": "claim", "claim_id": "claim_002" },
+      { "type": "narration", "text": "展厅开放情况方面，" },
+      { "type": "claim", "claim_id": "claim_003" },
+      { "type": "narration", "text": "综上，展品 A-17 的调拨符合内部流程，档案记录完整。" }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "claim_001",
+      "text": "展品 A-17 于 19:42 被移至展厅 C。",
+      "claim_kind": "fact",
+      "reasoning_pattern": null,
+      "correct_label": "unverified",
+      "explanation": "没有任何证据覆盖 19:42 的移动（盘点快照是 18:00、门禁日志不记展品、交接未提、修复备注是事后），因此无法确认移动是否发生；但也无法证明移动没发生——缺的是直接证据，不是相反证据。",
+      "key_evidence_ids": ["evidence_001", "evidence_004", "evidence_005"],
+      "related_evidence_ids": ["evidence_001", "evidence_002", "evidence_004", "evidence_005"]
+    },
+    {
+      "claim_id": "claim_002",
+      "text": "此次移动由调拨单 TR-204 批准。",
+      "claim_kind": "fact",
+      "reasoning_pattern": null,
+      "correct_label": "contradicted",
+      "explanation": "完整登记总账（任何调拨须登记后方可执行）中不存在 TR-204——这是虚构引用。即使'移动'本身未被证实（claim_001），'TR-204 批准'这一部分仍被完整登记否定。",
+      "key_evidence_ids": ["evidence_003"],
+      "related_evidence_ids": ["evidence_003"]
+    },
+    {
+      "claim_id": "claim_003",
+      "text": "展厅 C 当晚 19:00–20:00 对访客正常开放。",
+      "claim_kind": "fact",
+      "reasoning_pattern": null,
+      "correct_label": "supported",
+      "explanation": "门禁日志直接支持：19:00–20:00 有访客正常出入。",
+      "key_evidence_ids": ["evidence_002"],
+      "related_evidence_ids": ["evidence_002"]
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "evidence_001",
+      "title": "展品库存盘点快照",
+      "source_type": "primary_record",
+      "record_type": "snapshot",
+      "created_at": "2026-11-13T18:00",
+      "valid_from": "2026-11-13T18:00",
+      "valid_until": "2026-11-13T18:00",
+      "reliability": "high",
+      "reliability_basis": "截至 11-13 18:00 的盘点快照，不覆盖此后变动",
+      "is_primary": true,
+      "content_format": "text",
+      "content": "截至 2026-11-13 18:00 盘点，展品 A-17 登记于一楼展厅。本快照仅反映盘点时点状态，不覆盖 18:00 之后的任何变动。",
+      "table": {},
+      "relations": [
+        { "claim_id": "claim_001", "relation": "context" }
+      ]
+    },
+    {
+      "evidence_id": "evidence_002",
+      "title": "展厅 C 门禁日志",
+      "source_type": "primary_record",
+      "record_type": "log",
+      "created_at": "2026-11-13T20:30",
+      "valid_from": "2026-11-13T19:00",
+      "valid_until": "2026-11-13T20:00",
+      "reliability": "high",
+      "reliability_basis": "仅记录人员门禁，不记录展品搬运（展品搬运走货梯另行登记）",
+      "is_primary": true,
+      "content_format": "text",
+      "content": "2026-11-13 19:00–20:00 期间，展厅 C 门禁记录显示有多名访客与工作人员正常出入。本日志仅记录人员门禁，不记录展品搬运。",
+      "table": {},
+      "relations": [
+        { "claim_id": "claim_003", "relation": "supports" }
+      ]
+    },
+    {
+      "evidence_id": "evidence_003",
+      "title": "展品调拨单登记总账",
+      "source_type": "primary_record",
+      "record_type": "registry",
+      "created_at": "2026-11-14T09:00",
+      "valid_from": null,
+      "valid_until": null,
+      "reliability": "high",
+      "reliability_basis": "全量登记总账，覆盖 2026 年全部调拨单编号，任何调拨须登记后方可执行",
+      "is_primary": true,
+      "content_format": "text",
+      "content": "2026 年度展品调拨单登记总账：TR-201、TR-202、TR-203 均已登记。总账中不存在编号 TR-204 的调拨单。",
+      "table": {},
+      "relations": [
+        { "claim_id": "claim_002", "relation": "checked_no_match" }
+      ]
+    },
+    {
+      "evidence_id": "evidence_004",
+      "title": "值班人员交接记录",
+      "source_type": "internal_note",
+      "record_type": "handover",
+      "created_at": "2026-11-13T21:00",
+      "valid_from": null,
+      "valid_until": null,
+      "reliability": "medium",
+      "reliability_basis": "当班交接记录，可能不完整",
+      "is_primary": false,
+      "content_format": "text",
+      "content": "11 月 13 日当班交接记录提到展品 A-17 需要修复，未提及任何移动事项。",
+      "table": {},
+      "relations": [
+        { "claim_id": "claim_001", "relation": "context" }
+      ]
+    },
+    {
+      "evidence_id": "evidence_005",
+      "title": "修复部门备注",
+      "source_type": "internal_note",
+      "record_type": "note",
+      "created_at": "2026-11-14T10:00",
+      "valid_from": null,
+      "valid_until": null,
+      "reliability": "medium",
+      "reliability_basis": "事后备注，仅说明当前状态",
+      "is_primary": false,
+      "content_format": "text",
+      "content": "展品 A-17 于 11 月 14 日因损坏送修复部，暂不在展厅。本备注只说明当前状态，不说明 11 月 13 日晚 19:42 展品在哪里。",
+      "table": {},
+      "relations": [
+        { "claim_id": "claim_001", "relation": "context" }
+      ]
+    }
+  ],
+  "final_decisions": {
+    "preferred_action": "revise",
+    "accepted_actions": [
+      { "action": "revise", "label": "退回修订", "description": "存在虚构引用，应退回修订", "score_weight": 1.0, "reason": "引用 TR-204 不存在，属于确定性错误" },
+      { "action": "hold", "label": "暂缓发布", "description": "关键事实尚未核实", "score_weight": 0.6, "reason": "谨慎，但未指出确定性错误" },
+      { "action": "approve_with_caveat", "label": "附带限定发布", "description": "保留但须注明不确定性", "score_weight": 0.1, "reason": "报告存在未证实的移动陈述" },
+      { "action": "approve", "label": "批准发布", "description": "所有关键陈述有足够证据", "score_weight": 0.0, "reason": "报告含虚构引用，不应批准" }
+    ]
+  },
+  "hints": [
+    { "hint_id": "hint_001", "type": "direction", "text": "报告里的每个编号都应该能在登记里找到出处。检查一下报告提到的那个调拨单编号。" },
+    { "hint_id": "hint_002", "type": "evidence", "text": "调拨单登记清单是完整的吗？它覆盖了哪些编号？" },
+    { "hint_id": "hint_003", "type": "concept", "text": "记录里'不存在某个编号'和'没找到关于某事的记录'，是两种不同的证据强度。" }
+  ],
+  "scoring": {
+    "evidence": { "unrelated_penalty": 1.0, "miss_penalty": 1.0 }
+  },
+  "debrief": {
+    "knowledge_card_id": "card_fc_001",
+    "knowledge_title": "没有找到证据，不等于证明它是假的",
+    "knowledge_body": "一个看起来规范的引用（有编号、有格式）不代表它真实存在。生成式 AI 可能编造看似合理的出处，需要回到原始来源核查。找不到来源只能说明尚未验证，不能自动证明内容为假。",
+    "model_behavior_note": "ORION 生成了格式规范但实际不存在的引用，展示的是预置的幻觉类型，不代表真实模型有主观意图或蓄意行为。",
+    "transfer_check": {
+      "question": "遇到 AI 给出的一个文件编号或出处，你应该：",
+      "options": [
+        "直接采信，格式规范说明来源真实",
+        "回到原始来源核查是否存在",
+        "因为没有这个编号，所以断言内容一定是假的"
+      ],
+      "answer_index": 1
+    }
+  }
+}

@@ -8,6 +8,7 @@ const TestDomain = preload("res://tests/test_domain.gd")
 const TestGameState = preload("res://tests/test_game_state.gd")
 const TestScoring = preload("res://tests/test_scoring.gd")
 const TestScoringInvariants = preload("res://tests/test_scoring_invariants.gd")
+const TestContentQuality = preload("res://tests/test_content_quality.gd")
 
 
 func _initialize() -> void:
@@ -17,6 +18,7 @@ func _initialize() -> void:
 	failures.append_array(TestGameState.run(self))
 	failures.append_array(TestScoring.run(self))
 	failures.append_array(TestScoringInvariants.run(self))
+	failures.append_array(TestContentQuality.run(self))
 	if failures.is_empty():
 		print("ALL TESTS PASSED")
 		quit(0)

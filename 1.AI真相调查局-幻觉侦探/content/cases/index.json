@@ -1,0 +1,13 @@
+{
+  "schema_version": 2,
+  "cases": [
+    {
+      "case_id": "case_001",
+      "title": "不存在的引用",
+      "difficulty": "easy",
+      "order": 1,
+      "unlock_condition": "always",
+      "summary": "博物馆准备发布一份关于展品 A-17 调拨的内部报告，等待调查员核查。"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "cards": [
+    {
+      "card_id": "card_fc_001",
+      "title": "引用格式正确 ≠ 来源真实",
+      "category": "fact_check",
+      "icon": "icon_quote",
+      "body": "一个看起来规范的引用（有编号、有格式）不代表它真实存在。生成式 AI 可能编造看似合理的出处，需要回到原始来源核查。",
+      "scope": "适用于生成式 AI 的引用/出处场景；不表示所有模型都必然如此。",
+      "caveat": "找不到来源只能说明尚未验证，不能自动证明内容为假。",
+      "references": ["CONTENT_SOURCES.md#case_001"],
+      "last_reviewed": "2026-11-16",
+      "reviewer": "待填",
+      "source_case_id": "case_001"
+    }
+  ]
+}
