@@ -93,12 +93,12 @@ static func _check_autoloads(root: Node) -> Array[String]:
 	if sm.get_setting("volume_master") != 0.5:
 		f.append("set_setting 未生效")
 	sm.set_setting("volume_master", 0.8)
-	if not cl.get_catalog().cases.is_empty():
-		f.append("get_catalog 应为空")
+	if cl.get_catalog().cases.is_empty():
+		f.append("get_catalog 应有案件")
 	if cl.load_case("x").ok:
 		f.append("load_case(不存在) 应 ok=false")
-	if cl.get_knowledge_cards().get("cards", null) == null:
-		f.append("get_knowledge_cards 应返回 {cards:[]}")
+	if cl.get_knowledge_cards().is_empty():
+		f.append("get_knowledge_cards 应有知识卡")
 	return f
 
 
