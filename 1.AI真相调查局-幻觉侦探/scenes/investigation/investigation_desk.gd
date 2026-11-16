@@ -22,6 +22,11 @@ func _ready() -> void:
 	$Margin/VBox/JudgementBar/SubmitButton.pressed.connect(_on_submit)
 	cancel_button.pressed.connect(_on_cancel)
 	report.meta_clicked.connect(_on_meta_clicked)
+	# 四种判定按状态着色
+	$Margin/VBox/JudgementBar/JudgeSupported.add_theme_color_override("font_color", GameTheme.COLOR_ACCENT)
+	$Margin/VBox/JudgementBar/JudgeContradicted.add_theme_color_override("font_color", GameTheme.COLOR_DANGER)
+	$Margin/VBox/JudgementBar/JudgeUnverified.add_theme_color_override("font_color", GameTheme.COLOR_WARNING)
+	$Margin/VBox/JudgementBar/JudgeOutdated.add_theme_color_override("font_color", GameTheme.COLOR_WARNING)
 	_render()
 	_refresh()
 
@@ -30,7 +35,7 @@ func _render() -> void:
 	var def = GameFlow.current_case_def
 	if def == null:
 		return
-	case_title.text = def.title
+	case_title.text = "案件 #%s · %s · 调查基准 %s" % [def.case_id, def.title, def.as_of]
 	report.bbcode_enabled = true
 	var bb := ""
 	for seg in def.report_segments:
