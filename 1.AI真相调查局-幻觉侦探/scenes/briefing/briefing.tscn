@@ -16,10 +16,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = -200.0
-offset_right = 300.0
-offset_bottom = 200.0
+offset_left = -350.0
+offset_top = -220.0
+offset_right = 350.0
+offset_bottom = 220.0
 
 [node name="TitleLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
@@ -33,9 +33,17 @@ text = ""
 layout_mode = 2
 text = ""
 
+[node name="ObjectivesLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = ""
+
+[node name="FictionLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = ""
+
 [node name="CalibrationStep" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-text = "校准：判断下面的样例陈述属于四类中的哪一类。"
+text = "校准：判断下面的陈述属于四类中的哪一类。"
 
 [node name="StartButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2

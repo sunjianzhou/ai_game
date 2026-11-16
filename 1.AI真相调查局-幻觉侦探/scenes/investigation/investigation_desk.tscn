@@ -27,7 +27,23 @@ layout_mode = 1
 anchor_left = 0.7
 anchor_top = 0.7
 anchor_right = 1.0
+anchor_bottom = 0.9
+
+[node name="StatusLabel" type="Label" parent="."]
+layout_mode = 1
+anchor_left = 0.0
+anchor_top = 0.7
+anchor_right = 0.7
+anchor_bottom = 0.9
+text = "点击报告中的陈述以开始判定"
+
+[node name="HintLabel" type="Label" parent="."]
+layout_mode = 1
+anchor_left = 0.0
+anchor_top = 0.9
+anchor_right = 1.0
 anchor_bottom = 1.0
+text = ""
 
 [node name="JudgementBar" type="HBoxContainer" parent="."]
 layout_mode = 1

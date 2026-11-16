@@ -117,8 +117,8 @@ static func _validate(d: Dictionary) -> Array:
 		var vu = e.get("valid_until")
 		if vf != null and vu != null and str(vf) > str(vu):
 			errors.append(_err(case_id, eid, CODE_INVALID_DATE_RANGE, "valid_from > valid_until"))
-		if str(e.get("record_type", "")) == "snapshot" and vu == null:
-			errors.append(_err(case_id, eid, CODE_SNAPSHOT_NO_VALID_UNTIL, "snapshot 需要 valid_until"))
+		if str(e.get("record_type", "")) == "snapshot" and (vu == null or str(vu).strip_edges() == ""):
+			errors.append(_err(case_id, eid, CODE_SNAPSHOT_NO_VALID_UNTIL, "snapshot 需要非空 valid_until"))
 		if str(e.get("reliability_basis", "")) == "":
 			errors.append(_err(case_id, eid + ".reliability_basis", CODE_MISSING_TEXT, "reliability_basis 不能为空"))
 		if str(e.get("content_format", "text")) == "table":

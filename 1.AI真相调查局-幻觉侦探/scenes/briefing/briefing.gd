@@ -8,8 +8,10 @@ func _ready() -> void:
 		$VBoxContainer/TitleLabel.text = def.title
 		$VBoxContainer/BriefingLabel.text = def.briefing
 		$VBoxContainer/AsOfLabel.text = "调查基准时间：" + def.as_of
+		$VBoxContainer/ObjectivesLabel.text = "目标：" + "\n".join(def.objectives)
+		$VBoxContainer/FictionLabel.text = def.fiction_note
 
 
 func _on_start() -> void:
-	GameFlow.begin_investigation()
-	GameFlow.goto(GameFlow.Page.INVESTIGATION)
+	if GameFlow.begin_investigation():
+		GameFlow.goto(GameFlow.Page.INVESTIGATION)

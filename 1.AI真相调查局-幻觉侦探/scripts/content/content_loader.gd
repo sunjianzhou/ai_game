@@ -45,6 +45,9 @@ func _load_catalog() -> CaseCatalog:
 	var parsed = JSON.parse_string(file.get_as_text())
 	if parsed is Dictionary:
 		for c in parsed.get("cases", []):
+			if Enums.unlock_condition_value(str(c.get("unlock_condition", "always"))) == -1:
+				push_warning("非法 unlock_condition，跳过案件: %s" % str(c.get("case_id", "")))
+				continue
 			cat.cases.append(c)
 	return cat
 
