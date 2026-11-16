@@ -81,7 +81,7 @@ func _refresh() -> void:
 		var ev = def.evidence_by_id.get(eid)
 		if ev == null:
 			continue
-		var is_linked := _active_claim != "" and eid in GameFlow.current_session.get_linked_evidence(_active_claim)
+		var is_linked: bool = _active_claim != "" and eid in GameFlow.current_session.get_linked_evidence(_active_claim)
 		btn.text = ("✓ " if is_linked else "") + "%s（%s）" % [ev.title, ev.source_type]
 
 
