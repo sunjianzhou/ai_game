@@ -1,5 +1,5 @@
 # CaseSession 状态机 + 会话类型测试（会话级；GameFlow 层用例在 Task 6 加）
-static func run(_tree: SceneTree) -> Array[String]:
+static func run(tree: SceneTree) -> Array[String]:
 	var f: Array[String] = []
 	_check_init(f)
 	_check_judge(f)
@@ -8,7 +8,53 @@ static func run(_tree: SceneTree) -> Array[String]:
 	_check_submit(f)
 	_check_reset(f)
 	_check_roundtrip(f)
+	_check_gameflow(f, tree)
 	return f
+
+
+static func _check_gameflow(f: Array, tree: SceneTree) -> void:
+	var gf = tree.root.get_node("GameFlow")
+	if not gf.start_case("case_001"):
+		f.append("start_case(case_001) 应成功")
+		return
+	if gf.current_session.phase != CaseSession.Phase.BRIEFING:
+		f.append("start_case 后应 BRIEFING")
+	if gf.start_case("nope"):
+		f.append("start_case(不存在) 应失败")
+	if not gf.begin_investigation():
+		f.append("begin_investigation 应成功")
+	for i in [1, 2, 3]:
+		gf.judge_claim("claim_00%d" % i, "unverified")
+	if gf.current_session.phase != CaseSession.Phase.READY_TO_SUBMIT:
+		f.append("判 3 条后应 READY_TO_SUBMIT")
+	if not gf.link_evidence("claim_001", "evidence_001"):
+		f.append("READY 下 link 应 true")
+	if not gf.judge_claim("claim_001", "contradicted"):
+		f.append("READY 下 judge 应 true")
+	if gf.current_session.phase != CaseSession.Phase.READY_TO_SUBMIT:
+		f.append("READY 改判后应保持 READY")
+	if not gf.submit_final("revise"):
+		f.append("submit_final 应成功")
+	if gf.current_result == null:
+		f.append("submit 后 current_result 应非空")
+	if not gf.submit_final("revise"):
+		f.append("submit 同参幂等应 true")
+	if gf.submit_final("hold"):
+		f.append("submit 异参应 false")
+	var bs := int(gf.player_progress.progress.get("case_001", {}).get("best_score", -1))
+	if bs < 0:
+		f.append("submit 后应更新 best_score")
+	if not gf.begin_debrief():
+		f.append("begin_debrief 应成功")
+	if not gf.player_progress.collected_cards.has("card_fc_001"):
+		f.append("debrief 后应收集 card_fc_001")
+	var saved_bs := int(gf.player_progress.progress.get("case_001", {}).get("best_score", -1))
+	gf.reset_case()
+	if int(gf.player_progress.progress.get("case_001", {}).get("best_score", -1)) != saved_bs:
+		f.append("reset_case 应保留 best_score")
+	gf.end_case()
+	if gf.current_session != null:
+		f.append("end_case 应清 session")
 
 
 static func _make_case(claim_count: int = 3) -> CaseDefinition:
