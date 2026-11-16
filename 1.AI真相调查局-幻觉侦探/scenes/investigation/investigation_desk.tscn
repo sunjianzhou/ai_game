@@ -23,6 +23,10 @@ theme_override_constants/margin_bottom = 16
 layout_mode = 2
 theme_override_constants/separation = 12
 
+[node name="Instruction" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+text = "① 点报告中的陈述　② 选判定　③ 点右侧证据关联　④ 去提交"
+
 [node name="Header" type="HBoxContainer" parent="Margin/VBox"]
 layout_mode = 2
 
@@ -50,18 +54,37 @@ layout_mode = 2
 size_flags_vertical = 3
 scroll_active = true
 
-[node name="StatusLabel" type="Label" parent="Margin/VBox/Main/Left"]
+[node name="SelectedPanel" type="PanelContainer" parent="Margin/VBox/Main/Left"]
 layout_mode = 2
-text = "点击报告中的陈述以开始判定"
+
+[node name="SelectedBox" type="VBoxContainer" parent="Margin/VBox/Main/Left/SelectedPanel"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="SelectedClaimLabel" type="Label" parent="Margin/VBox/Main/Left/SelectedPanel/SelectedBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
+text = "未选中陈述（点击报告中带编号的句子）"
+
+[node name="LinkedEvidenceLabel" type="Label" parent="Margin/VBox/Main/Left/SelectedPanel/SelectedBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
+text = ""
+
+[node name="CancelButton" type="Button" parent="Margin/VBox/Main/Left/SelectedPanel/SelectedBox"]
+layout_mode = 2
+text = "取消选择"
 
 [node name="Right" type="VBoxContainer" parent="Margin/VBox/Main"]
 layout_mode = 2
-custom_minimum_size = Vector2(320, 0)
+custom_minimum_size = Vector2(340, 0)
 theme_override_constants/separation = 8
 
 [node name="EvidenceTitle" type="Label" parent="Margin/VBox/Main/Right"]
 layout_mode = 2
-text = "证据材料"
+text = "证据材料（点击查看）"
 
 [node name="Scroll" type="ScrollContainer" parent="Margin/VBox/Main/Right"]
 layout_mode = 2

@@ -1,11 +1,14 @@
 extends Control
 
 var _active_claim: String = ""
+var _evidence_buttons: Dictionary = {}   # evidence_id -> Button
 
 @onready var report: RichTextLabel = $Margin/VBox/Main/Left/ReportRichText
 @onready var pips: HBoxContainer = $Margin/VBox/Header/ClaimPips
 @onready var evidence_list: VBoxContainer = $Margin/VBox/Main/Right/Scroll/EvidenceList
-@onready var status_label: Label = $Margin/VBox/Main/Left/StatusLabel
+@onready var selected_label: Label = $Margin/VBox/Main/Left/SelectedPanel/SelectedBox/SelectedClaimLabel
+@onready var linked_label: Label = $Margin/VBox/Main/Left/SelectedPanel/SelectedBox/LinkedEvidenceLabel
+@onready var cancel_button: Button = $Margin/VBox/Main/Left/SelectedPanel/SelectedBox/CancelButton
 @onready var hint_label: Label = $Margin/VBox/HintLabel
 @onready var case_title: Label = $Margin/VBox/Header/CaseTitle
 
@@ -17,6 +20,7 @@ func _ready() -> void:
 	$Margin/VBox/JudgementBar/JudgeOutdated.pressed.connect(_on_judge.bind("outdated"))
 	$Margin/VBox/JudgementBar/HintButton.pressed.connect(_on_hint)
 	$Margin/VBox/JudgementBar/SubmitButton.pressed.connect(_on_submit)
+	cancel_button.pressed.connect(_on_cancel)
 	report.meta_clicked.connect(_on_meta_clicked)
 	_render()
 	_refresh()
@@ -46,26 +50,39 @@ func _render() -> void:
 		btn.text = "%s（%s）" % [e.title, e.source_type]
 		btn.pressed.connect(_on_evidence.bind(e.evidence_id))
 		evidence_list.add_child(btn)
+		_evidence_buttons[e.evidence_id] = btn
 
 
 func _refresh() -> void:
 	var def = GameFlow.current_case_def
 	if def == null or GameFlow.current_session == null:
 		return
+	# pips 着色 + 报告高亮已在 _render 完成（pips 文本）
 	for c in def.claims:
 		var pip = pips.get_node_or_null("Pip_%s" % c.claim_id)
 		if pip != null:
-			pip.text = "●" if GameFlow.current_session.is_judged(c.claim_id) else "○"
+			pip.text = "● %s" % c.claim_id if GameFlow.current_session.is_judged(c.claim_id) else "○ %s" % c.claim_id
+	# 选中面板
 	if _active_claim != "":
 		var c = def.claims_by_id.get(_active_claim)
 		if c != null:
 			var label := GameFlow.current_session.get_judgement(_active_claim)
-			status_label.text = "当前陈述：%s（已判：%s）" % [c.text, label if label != "" else "未判"]
+			selected_label.text = "陈述：%s（判定：%s）" % [c.text, label if label != "" else "未判"]
 		var linked := GameFlow.current_session.get_linked_evidence(_active_claim)
-		if not linked.is_empty():
-			status_label.text += " · 已关联 %d 条证据" % linked.size()
+		linked_label.text = "已关联证据：%s" % ("、".join(linked) if not linked.is_empty() else "无")
+		cancel_button.visible = true
 	else:
-		status_label.text = "点击报告中的陈述以开始判定"
+		selected_label.text = "未选中陈述（点击报告中带编号的句子）"
+		linked_label.text = ""
+		cancel_button.visible = false
+	# 证据卡关联标记
+	for eid in _evidence_buttons:
+		var btn: Button = _evidence_buttons[eid]
+		var ev = def.evidence_by_id.get(eid)
+		if ev == null:
+			continue
+		var is_linked := _active_claim != "" and eid in GameFlow.current_session.get_linked_evidence(_active_claim)
+		btn.text = ("✓ " if is_linked else "") + "%s（%s）" % [ev.title, ev.source_type]
 
 
 func _on_meta_clicked(meta) -> void:
@@ -73,9 +90,14 @@ func _on_meta_clicked(meta) -> void:
 	_refresh()
 
 
+func _on_cancel() -> void:
+	_active_claim = ""
+	_refresh()
+
+
 func _on_judge(label: String) -> void:
 	if _active_claim == "":
-		status_label.text = "请先点击报告中的一条陈述"
+		selected_label.text = "请先点击报告中的一条陈述再判定"
 		return
 	if GameFlow.judge_claim(_active_claim, label):
 		_refresh()
@@ -105,6 +127,6 @@ func _on_hint() -> void:
 
 func _on_submit() -> void:
 	if GameFlow.current_session != null and GameFlow.current_session.phase != CaseSession.Phase.READY_TO_SUBMIT:
-		status_label.text = "仍有陈述未判定，无法提交"
+		selected_label.text = "仍有陈述未判定，无法提交"
 		return
 	GameFlow.goto(GameFlow.Page.FINAL_VERDICT)
