@@ -11,13 +11,14 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -300.0
-offset_top = -200.0
-offset_right = 300.0
-offset_bottom = 200.0
+offset_left = -320.0
+offset_top = -220.0
+offset_right = 320.0
+offset_bottom = 220.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
 layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="TitleLabel" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
@@ -25,16 +26,31 @@ text = ""
 
 [node name="InfoLabel" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
 text = ""
 
 [node name="ContentLabel" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+autowrap_mode = 3
 text = ""
 
 [node name="BasisLabel" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
 text = ""
 
-[node name="LinkButton" type="Button" parent="Panel/VBoxContainer"]
+[node name="Buttons" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LinkButton" type="Button" parent="Panel/VBoxContainer/Buttons"]
 layout_mode = 2
 text = "关联到当前陈述"
+
+[node name="CloseButton" type="Button" parent="Panel/VBoxContainer/Buttons"]
+layout_mode = 2
+text = "关闭"
