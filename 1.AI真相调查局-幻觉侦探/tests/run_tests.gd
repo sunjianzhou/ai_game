@@ -5,12 +5,18 @@ extends SceneTree
 
 const TestS1 = preload("res://tests/test_s1_skeleton.gd")
 const TestDomain = preload("res://tests/test_domain.gd")
+const TestGameState = preload("res://tests/test_game_state.gd")
+const TestScoring = preload("res://tests/test_scoring.gd")
+const TestScoringInvariants = preload("res://tests/test_scoring_invariants.gd")
 
 
 func _initialize() -> void:
 	var failures: Array[String] = []
 	failures.append_array(TestS1.run(self))
 	failures.append_array(TestDomain.run(self))
+	failures.append_array(TestGameState.run(self))
+	failures.append_array(TestScoring.run(self))
+	failures.append_array(TestScoringInvariants.run(self))
 	if failures.is_empty():
 		print("ALL TESTS PASSED")
 		quit(0)
