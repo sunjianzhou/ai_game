@@ -2,20 +2,21 @@ extends Control
 
 var _active_claim: String = ""
 
-@onready var report: RichTextLabel = $ReportRichText
-@onready var pips: HBoxContainer = $ClaimPips
-@onready var evidence_list: VBoxContainer = $EvidenceList
-@onready var status_label: Label = $StatusLabel
-@onready var hint_label: Label = $HintLabel
+@onready var report: RichTextLabel = $Margin/VBox/Main/Left/ReportRichText
+@onready var pips: HBoxContainer = $Margin/VBox/Header/ClaimPips
+@onready var evidence_list: VBoxContainer = $Margin/VBox/Main/Right/Scroll/EvidenceList
+@onready var status_label: Label = $Margin/VBox/Main/Left/StatusLabel
+@onready var hint_label: Label = $Margin/VBox/HintLabel
+@onready var case_title: Label = $Margin/VBox/Header/CaseTitle
 
 
 func _ready() -> void:
-	$JudgementBar/JudgeSupported.pressed.connect(_on_judge.bind("supported"))
-	$JudgementBar/JudgeContradicted.pressed.connect(_on_judge.bind("contradicted"))
-	$JudgementBar/JudgeUnverified.pressed.connect(_on_judge.bind("unverified"))
-	$JudgementBar/JudgeOutdated.pressed.connect(_on_judge.bind("outdated"))
-	$JudgementBar/HintButton.pressed.connect(_on_hint)
-	$JudgementBar/SubmitButton.pressed.connect(_on_submit)
+	$Margin/VBox/JudgementBar/JudgeSupported.pressed.connect(_on_judge.bind("supported"))
+	$Margin/VBox/JudgementBar/JudgeContradicted.pressed.connect(_on_judge.bind("contradicted"))
+	$Margin/VBox/JudgementBar/JudgeUnverified.pressed.connect(_on_judge.bind("unverified"))
+	$Margin/VBox/JudgementBar/JudgeOutdated.pressed.connect(_on_judge.bind("outdated"))
+	$Margin/VBox/JudgementBar/HintButton.pressed.connect(_on_hint)
+	$Margin/VBox/JudgementBar/SubmitButton.pressed.connect(_on_submit)
 	report.meta_clicked.connect(_on_meta_clicked)
 	_render()
 	_refresh()
@@ -25,6 +26,7 @@ func _render() -> void:
 	var def = GameFlow.current_case_def
 	if def == null:
 		return
+	case_title.text = def.title
 	report.bbcode_enabled = true
 	var bb := ""
 	for seg in def.report_segments:

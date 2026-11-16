@@ -17,8 +17,8 @@ func _ready() -> void:
 			bb += "  解释：%s\n\n" % cd.explanation
 	if def != null:
 		bb += str(def.debrief.get("knowledge_body", ""))
-	$VBoxContainer/BodyLabel.text = bb
-	$VBoxContainer/BackButton.pressed.connect(_on_back)
+	$Margin/VBoxContainer/Scroll/BodyLabel.text = bb
+	$Margin/VBoxContainer/BackButton.pressed.connect(_on_back)
 
 
 func _on_back() -> void:

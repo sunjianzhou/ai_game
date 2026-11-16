@@ -6,9 +6,9 @@ func _ready() -> void:
 	var cat = loader.get_catalog()
 	if not cat.cases.is_empty():
 		var c = cat.cases[0]
-		$VBoxContainer/CaseCard.text = "%s · %s" % [str(c.get("title", "")), str(c.get("summary", ""))]
-		$VBoxContainer/CaseCard.pressed.connect(_on_case.bind(str(c.get("case_id", ""))))
-	$VBoxContainer/BackButton.pressed.connect(_on_back)
+		$Center/VBoxContainer/CaseCard.text = "%s · %s" % [str(c.get("title", "")), str(c.get("summary", ""))]
+		$Center/VBoxContainer/CaseCard.pressed.connect(_on_case.bind(str(c.get("case_id", ""))))
+	$Center/VBoxContainer/BackButton.pressed.connect(_on_back)
 
 
 func _on_case(case_id: String) -> void:
