@@ -3,12 +3,6 @@
 
 const MAIN_MENU_SCENE := "res://scenes/menu/main_menu.tscn"
 const PLACEHOLDER_SCENES := [
-	"res://scenes/case_select/case_select.tscn",
-	"res://scenes/briefing/briefing.tscn",
-	"res://scenes/investigation/investigation_desk.tscn",
-	"res://scenes/verdict/final_verdict.tscn",
-	"res://scenes/debrief/results.tscn",
-	"res://scenes/debrief/debrief.tscn",
 	"res://scenes/knowledge/collection.tscn",
 	"res://scenes/settings/settings.tscn",
 ]
