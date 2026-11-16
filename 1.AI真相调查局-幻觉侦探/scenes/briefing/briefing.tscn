@@ -29,6 +29,8 @@ text = "案件简报"
 
 [node name="BriefingLabel" type="Label" parent="Margin/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
 text = ""
 
 [node name="AsOfLabel" type="Label" parent="Margin/VBoxContainer"]
@@ -37,10 +39,14 @@ text = ""
 
 [node name="ObjectivesLabel" type="Label" parent="Margin/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
 text = ""
 
 [node name="FictionLabel" type="Label" parent="Margin/VBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+autowrap_mode = 3
 text = ""
 
 [node name="CalibrationStep" type="Label" parent="Margin/VBoxContainer"]
