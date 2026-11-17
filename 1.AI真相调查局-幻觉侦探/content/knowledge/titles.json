@@ -1,0 +1,17 @@
+{
+  "schema_version": 2,
+  "titles": [
+    {
+      "title_id": "title_intern",
+      "name": "见习调查员",
+      "description": "完成 1 个案件",
+      "unlock_rule": { "type": "cases_completed", "count": 1 }
+    },
+    {
+      "title_id": "title_fact_checker",
+      "name": "事实核查员",
+      "description": "完成第一季全部案件",
+      "unlock_rule": { "type": "all_cases" }
+    }
+  ]
+}

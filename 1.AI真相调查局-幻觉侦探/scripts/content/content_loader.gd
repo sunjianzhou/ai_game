@@ -33,8 +33,16 @@ func get_knowledge_cards() -> Array[KnowledgeCard]:
 	return _cards_cache
 
 
-func get_titles() -> Dictionary:
-	return {"titles": []}
+func get_titles() -> Array:
+	var out: Array = []
+	var file := FileAccess.open(content_root.path_join("knowledge/titles.json"), FileAccess.READ)
+	if file == null:
+		return out
+	var parsed = JSON.parse_string(file.get_as_text())
+	if parsed is Dictionary:
+		for t in parsed.get("titles", []):
+			out.append(t)
+	return out
 
 
 func _load_catalog() -> CaseCatalog:

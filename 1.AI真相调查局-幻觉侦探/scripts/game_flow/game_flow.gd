@@ -209,6 +209,10 @@ func begin_debrief() -> bool:
 		var card_id := str(current_case_def.debrief.get("knowledge_card_id", ""))
 		if card_id != "" and not player_progress.collected_cards.has(card_id):
 			player_progress.collected_cards.append(card_id)
+		var total := ContentLoader.get_catalog().cases.size()
+		for tid in TitleEvaluator.evaluate(ContentLoader.get_titles(), player_progress, total):
+			if not player_progress.earned_titles.has(tid):
+				player_progress.earned_titles.append(tid)
 		player_progress.last_case_id = case_id
 		case_completed.emit(case_id)
 		case_state_changed.emit(before, current_session.phase)
