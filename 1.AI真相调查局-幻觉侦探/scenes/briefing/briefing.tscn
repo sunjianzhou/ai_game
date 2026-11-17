@@ -56,3 +56,7 @@ text = "校准：判断下面的陈述属于四类中的哪一类。"
 [node name="StartButton" type="Button" parent="Margin/VBoxContainer"]
 layout_mode = 2
 text = "开始调查"
+
+[node name="FooterBadge" type="Label" parent="Margin/VBoxContainer"]
+layout_mode = 2
+text = "虚构案例 · 非真实模型测评"
