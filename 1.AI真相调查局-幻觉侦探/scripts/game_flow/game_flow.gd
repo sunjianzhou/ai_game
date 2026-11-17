@@ -29,6 +29,7 @@ var player_progress: PlayerProgress = PlayerProgress.new()
 var previous_page: int = -1
 var _settings_cache = null
 var _catalog_cache = null
+var _draft_timer: Timer = null
 
 
 func _ready() -> void:
@@ -36,6 +37,67 @@ func _ready() -> void:
 	assert(get_node_or_null("/root/ContentLoader") != null, "ContentLoader must load before GameFlow")
 	_settings_cache = SaveManager.get_setting("volume_master")
 	_catalog_cache = ContentLoader.get_catalog()
+	_init_draft_timer()
+	get_tree().auto_accept_quit = false
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		_save_draft()
+		get_tree().quit()
+
+
+func _init_draft_timer() -> void:
+	_draft_timer = Timer.new()
+	_draft_timer.one_shot = true
+	_draft_timer.wait_time = 1.0
+	_draft_timer.timeout.connect(_save_draft)
+	add_child(_draft_timer)
+
+
+func _schedule_draft_save() -> void:
+	if _draft_timer != null:
+		_draft_timer.start()
+
+
+func _save_draft() -> void:
+	if current_session == null or current_case_def == null:
+		return
+	var wrapper := {
+		"draft_version": 1,
+		"case_id": current_case_def.case_id,
+		"saved_at": Time.get_datetime_string_from_system(),
+		"session": current_session.to_dict(),
+	}
+	SaveManager.save_draft(wrapper)
+
+
+func has_resumable_draft() -> Dictionary:
+	return SaveManager.load_draft()
+
+
+func resume_draft() -> bool:
+	var d := SaveManager.load_draft()
+	if d.is_empty():
+		return false
+	var case_id := str(d.get("case_id", ""))
+	var result := ContentLoader.load_case(case_id)
+	if not result.ok:
+		SaveManager.clear_draft()
+		return false
+	current_case_def = result.case_def
+	var session_dict = d.get("session", {})
+	if not (session_dict is Dictionary):
+		SaveManager.clear_draft()
+		return false
+	var session := CaseSession.from_dict(session_dict, current_case_def)
+	if session == null:
+		SaveManager.clear_draft()
+		return false
+	current_session = session
+	current_result = null
+	case_started.emit(case_id)
+	return true
 
 
 func can_goto(page: int) -> bool:
@@ -61,6 +123,7 @@ func start_case(id: String) -> bool:
 	current_session = CaseSession.new(current_case_def)
 	current_session.begin_briefing()
 	current_result = null
+	SaveManager.clear_draft()
 	case_started.emit(id)
 	return true
 
@@ -80,27 +143,38 @@ func judge_claim(claim_id: String, label: String) -> bool:
 		return false
 	var before := current_session.phase
 	var ok := current_session.judge_claim(claim_id, label)
-	if ok and current_session.phase != before:
-		case_state_changed.emit(before, current_session.phase)
+	if ok:
+		_schedule_draft_save()
+		if current_session.phase != before:
+			case_state_changed.emit(before, current_session.phase)
 	return ok
 
 
 func link_evidence(claim_id: String, evidence_id: String) -> bool:
 	if current_session == null:
 		return false
-	return current_session.link_evidence(claim_id, evidence_id)
+	var ok := current_session.link_evidence(claim_id, evidence_id)
+	if ok:
+		_schedule_draft_save()
+	return ok
 
 
 func unlink_evidence(claim_id: String, evidence_id: String) -> bool:
 	if current_session == null:
 		return false
-	return current_session.unlink_evidence(claim_id, evidence_id)
+	var ok := current_session.unlink_evidence(claim_id, evidence_id)
+	if ok:
+		_schedule_draft_save()
+	return ok
 
 
 func use_hint(hint_id: String) -> bool:
 	if current_session == null:
 		return false
-	return current_session.use_hint(hint_id)
+	var ok := current_session.use_hint(hint_id)
+	if ok:
+		_schedule_draft_save()
+	return ok
 
 
 func submit_final(action: String) -> bool:
@@ -138,6 +212,7 @@ func begin_debrief() -> bool:
 		player_progress.last_case_id = case_id
 		case_completed.emit(case_id)
 		case_state_changed.emit(before, current_session.phase)
+		SaveManager.clear_draft()
 	return ok
 
 

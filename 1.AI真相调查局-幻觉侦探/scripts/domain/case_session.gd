@@ -149,10 +149,40 @@ func to_dict() -> Dictionary:
 
 
 static func from_dict(d: Dictionary, def: CaseDefinition) -> CaseSession:
+	# 校验：非法即返回 null（草稿是不可信输入）
 	var s := CaseSession.new(def)
-	s.phase = int(d.get("phase", Phase.NOT_STARTED))
-	s.judgements = (d.get("judgements", {}) as Dictionary).duplicate(true)
-	s.evidence_links = (d.get("evidence_links", {}) as Dictionary).duplicate(true)
-	s.hint_used_id = str(d.get("hint_used_id", ""))
+	var phase := int(d.get("phase", -1))
+	if phase != Phase.INVESTIGATING and phase != Phase.READY_TO_SUBMIT and phase != Phase.SUBMITTED:
+		return null
+	s.phase = phase
+	var judgements = d.get("judgements", {})
+	if judgements is Dictionary:
+		for cid in judgements:
+			if not def.claims_by_id.has(cid):
+				return null
+			if Enums.claim_label_value(str(judgements[cid])) == -1:
+				return null
+			s.judgements[cid] = str(judgements[cid])
+	var links = d.get("evidence_links", {})
+	if links is Dictionary:
+		for cid in links:
+			if not def.claims_by_id.has(cid):
+				return null
+			var evs: Array = []
+			for eid in links[cid]:
+				if not def.evidence_by_id.has(str(eid)):
+					return null
+				evs.append(str(eid))
+			s.evidence_links[cid] = evs
+	var hint := str(d.get("hint_used_id", ""))
+	if hint != "":
+		var found := false
+		for h in def.hints:
+			if str(h.get("hint_id", "")) == hint:
+				found = true
+				break
+		if not found:
+			return null
+		s.hint_used_id = hint
 	s.final_action = str(d.get("final_action", ""))
 	return s
