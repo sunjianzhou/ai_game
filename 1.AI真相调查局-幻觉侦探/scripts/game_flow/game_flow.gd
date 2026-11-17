@@ -100,19 +100,46 @@ func resume_draft() -> bool:
 	return true
 
 
+const PAGE_PHASES := {
+	Page.BRIEFING: [CaseSession.Phase.BRIEFING],
+	Page.INVESTIGATION: [CaseSession.Phase.INVESTIGATING, CaseSession.Phase.READY_TO_SUBMIT],
+	Page.FINAL_VERDICT: [CaseSession.Phase.READY_TO_SUBMIT],
+	Page.RESULTS: [CaseSession.Phase.SUBMITTED],
+	Page.DEBRIEF: [CaseSession.Phase.COMPLETED],
+}
+
+
 func can_goto(page: int) -> bool:
-	return PAGE_SCENES.has(page)
+	if not PAGE_SCENES.has(page):
+		return false
+	if PAGE_PHASES.has(page):
+		if current_session == null:
+			return false
+		return PAGE_PHASES[page].has(current_session.phase)
+	return true
 
 
 func goto(page: int) -> bool:
 	if not can_goto(page):
 		return false
+	previous_page = _current_page()
 	return get_tree().change_scene_to_file(PAGE_SCENES[page]) == OK
 
 
 func back() -> bool:
 	var target: int = previous_page if previous_page >= 0 else Page.MAIN_MENU
 	return goto(target)
+
+
+func _current_page() -> int:
+	var scene := get_tree().current_scene
+	if scene == null:
+		return Page.MAIN_MENU
+	var path := scene.scene_file_path
+	for p in PAGE_SCENES:
+		if PAGE_SCENES[p] == path:
+			return p
+	return Page.MAIN_MENU
 
 
 func start_case(id: String) -> bool:

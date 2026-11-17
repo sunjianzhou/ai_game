@@ -55,6 +55,19 @@ static func _check_gameflow(f: Array, tree: SceneTree) -> void:
 	gf.end_case()
 	if gf.current_session != null:
 		f.append("end_case 应清 session")
+	_check_guard(f, tree)
+
+
+static func _check_guard(f: Array, tree: SceneTree) -> void:
+	var gf = tree.root.get_node("GameFlow")
+	if gf.can_goto(gf.Page.RESULTS):
+		f.append("无 session 时 RESULTS 不可达")
+	gf.start_case("case_001")
+	if not gf.can_goto(gf.Page.BRIEFING):
+		f.append("BRIEFING 应可去 briefing")
+	if gf.can_goto(gf.Page.RESULTS):
+		f.append("BRIEFING 不可去 results")
+	gf.end_case()
 
 
 static func _make_case(claim_count: int = 3) -> CaseDefinition:
