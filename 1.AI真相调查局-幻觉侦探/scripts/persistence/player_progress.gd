@@ -1,6 +1,6 @@
 class_name PlayerProgress
 extends RefCounted
-# 存档 DTO（S1 最小壳；字段带类型注解，S2 只加字段不改签名）
+# 存档 DTO
 
 var save_version: int = 2
 var settings: Dictionary = {
@@ -29,9 +29,22 @@ func to_dict() -> Dictionary:
 static func from_dict(d: Dictionary) -> PlayerProgress:
 	var p := PlayerProgress.new()
 	p.save_version = int(d.get("save_version", 2))
-	p.settings = (d.get("settings", {}) as Dictionary).duplicate()
-	p.progress = (d.get("progress", {}) as Dictionary).duplicate(true)
-	p.collected_cards = (d.get("collected_cards", []) as Array).duplicate()
-	p.earned_titles = (d.get("earned_titles", []) as Array).duplicate()
+	p.settings = _dict(d.get("settings"))
+	p.progress = _dict(d.get("progress"))
+	p.collected_cards = _strs(d.get("collected_cards"))
+	p.earned_titles = _strs(d.get("earned_titles"))
 	p.last_case_id = str(d.get("last_case_id", ""))
 	return p
+
+
+static func _dict(v) -> Dictionary:
+	return v.duplicate(true) if v is Dictionary else {}
+
+
+static func _strs(v) -> Array:
+	var out: Array = []
+	if v is Array:
+		for x in v:
+			if x is String:
+				out.append(x)
+	return out

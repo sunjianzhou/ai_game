@@ -12,6 +12,7 @@ const TestContentQuality = preload("res://tests/test_content_quality.gd")
 const TestCaseValidation = preload("res://tests/test_case_validation.gd")
 const TestCaseCatalog = preload("res://tests/test_case_catalog.gd")
 const TestSceneSmoke = preload("res://tests/test_scene_smoke.gd")
+const TestSave = preload("res://tests/test_save.gd")
 
 
 func _initialize() -> void:
@@ -25,6 +26,7 @@ func _initialize() -> void:
 	failures.append_array(TestCaseValidation.run(self))
 	failures.append_array(TestCaseCatalog.run(self))
 	failures.append_array(TestSceneSmoke.run(self))
+	failures.append_array(TestSave.run(self))
 	if failures.is_empty():
 		print("ALL TESTS PASSED")
 		quit(0)
