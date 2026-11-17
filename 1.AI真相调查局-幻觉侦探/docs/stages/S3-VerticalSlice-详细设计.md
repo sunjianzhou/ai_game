@@ -79,7 +79,7 @@ class SaveLoadResult:
 
 - `MISSING`（无文件）→ 返回默认 PlayerProgress，可写。
 - `CORRUPT`（JSON 语法错 / 缺 version / 关键字段类型错）→ 复制原文件为 `save.corrupt.<时间戳>` → 返回默认，可写。
-- `FUTURE_VERSION`（file_version > 当前）→ **不动原文件、不生成 .corrupt、`SaveManager.read_only = true`**，之后 `save()` 直接返回 false；UI 提示"存档来自更新版本，请升级"。
+- `FUTURE_VERSION`（file_version > 当前）→ **不动原文件、不生成 .corrupt、`SaveManager.read_only = true`**，之后 `save()` 直接返回 false；UI 提示"存档来自更新版本，请升级"。**逃生舱**：错误提示里加"清除存档并重新开始"高级按钮（二次确认），否则玩家会陷入"永远版本过新无法玩"的死锁。
 - `MIGRATED` → 迁移后返回（v1 从未发布过，S3 声明"不支持 v1，按 CORRUPT 处理"，记 DECISIONS）。
 
 ### 4.2 原子写序列（固定）
@@ -135,7 +135,7 @@ class SaveLoadResult:
 | INVESTIGATING / READY_TO_SUBMIT | 调查桌面 |
 | SUBMITTED | 结果页（或直接进结果） |
 
-- `GameFlow.resume_draft() -> bool`：`has_resumable_draft() -> {case_id, title, phase}` 供主菜单显示"继续上次调查"；恢复失败则 clear + 提示。
+- `GameFlow.resume_draft() -> bool`：`has_resumable_draft() -> {case_id, title, phase}` 供主菜单显示"继续上次调查"；恢复失败（校验拦截、案件内容已变导致 claim/evidence 被删）→ 把草稿重命名 `draft.invalid.<时间戳>` 并优雅回退到该案件初始状态（不崩溃、不静默丢弃）。
 - 退出时 flush 草稿（`NOTIFICATION_WM_CLOSE_REQUEST` + `_exit_tree` 兜底，headless no-op）。
 
 ---
@@ -147,6 +147,7 @@ class SaveLoadResult:
 **ORION 报告 = "过度自信的机器打印件"**：等宽字体（编号/日期/引用）、统一排版、页眉页脚（ORION 版本签名、页码、生成时间）、官方口吻。**证据 = "旧纸/扫描档案"**：暖色卡面、来源戳、可靠度依据、手写批注位。玩家要能一眼区分"机器输出"与"人工档案"。
 
 - 报告引用渲染为**可点击的 citation chip**（编号底色高亮）；缺失的引用（如 TR-204 不存在）点击给"来源未找到"反馈——这是案件 01 的 aha 载体。
+- **混排对齐**：CJK（Noto Sans SC）与西文等宽字体的基线/字号可能不一致导致上下错位；S3 早期写一个混排测试页验证，必要时用 Theme `font_size`/`LineSpacing` 微调。
 - 材质 token（新增）：`color.paper`（暖白 `#e8e0d0`）、`color.paper-ink`（档案墨色）、`color.mono`（等宽字体，OFL 一款，编号/日期用）。
 
 ### 6.2 页面线框（调查桌面 / 复盘 / 主菜单）
@@ -269,7 +270,7 @@ class SaveLoadResult:
 - `test_titles.gd`：称号评估器（cases_completed/all_cases/no_hint）。
 - 回归：S2 的 10 个 `test_*.gd` 全绿（含 `test_scene_smoke` 更新：断言 badge、帮助 overlay 不占页数）。
 - `test_offline.gd`（上游要求，S2 遗漏，S3 补）：静态扫描无网络 API。
-- 测试隔离：`run_tests.gd` 在所有 case 前设唯一临时目录（`base_path` 注入），结束清理还原；不 autoload `_ready` 读真实档。
+- 测试隔离：`run_tests.gd` 在所有 case 前设唯一临时目录（`base_path` 注入），结束清理还原；不 autoload `_ready` 读真实档。临时目录后缀用 `Time.get_ticks_usec()` 保证唯一（防并发/快速连续执行的文件占用冲突）。
 
 ---
 
