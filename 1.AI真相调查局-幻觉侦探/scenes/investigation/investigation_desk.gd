@@ -22,6 +22,8 @@ func _ready() -> void:
 	$Margin/VBox/JudgementBar/SubmitButton.pressed.connect(_on_submit)
 	cancel_button.pressed.connect(_on_cancel)
 	report.meta_clicked.connect(_on_meta_clicked)
+	$Margin/VBox/Header/HelpButton.pressed.connect(_on_help_pressed)
+	_populate_help()
 	# 四种判定按状态着色
 	$Margin/VBox/JudgementBar/JudgeSupported.add_theme_color_override("font_color", GameTheme.COLOR_ACCENT)
 	$Margin/VBox/JudgementBar/JudgeContradicted.add_theme_color_override("font_color", GameTheme.COLOR_DANGER)
@@ -135,3 +137,20 @@ func _on_submit() -> void:
 		selected_label.text = "仍有陈述未判定，无法提交"
 		return
 	GameFlow.goto(GameFlow.Page.FINAL_VERDICT)
+
+
+func _populate_help() -> void:
+	var box: VBoxContainer = $GlossaryDrawer/HelpBox
+	var text := "四类判定：\n"
+	for key in ClaimLabelCatalog.LABELS:
+		var e: Dictionary = ClaimLabelCatalog.LABELS[key]
+		text += "· %s：%s\n" % [str(e.get("display_name", "")), str(e.get("definition", ""))]
+	text += "\n评分：判定 60 + 证据关联 30 + 最终建议 10（提示 −5）。\n操作：点报告中的陈述 → 选判定 → 点右侧证据关联 → 去提交。"
+	var lbl := Label.new()
+	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl.text = text
+	box.add_child(lbl)
+
+
+func _on_help_pressed() -> void:
+	$GlossaryDrawer.visible = not $GlossaryDrawer.visible

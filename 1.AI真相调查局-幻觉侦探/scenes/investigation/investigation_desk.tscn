@@ -39,6 +39,10 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
+[node name="HelpButton" type="Button" parent="Margin/VBox/Header"]
+layout_mode = 2
+text = "帮助"
+
 [node name="Main" type="HBoxContainer" parent="Margin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -137,8 +141,12 @@ text = "虚构案例 · 非真实模型测评"
 
 [node name="GlossaryDrawer" type="PanelContainer" parent="."]
 layout_mode = 1
-anchor_left = 0.7
-anchor_top = 0.0
+anchor_left = 0.55
+anchor_top = 0.05
 anchor_right = 1.0
-anchor_bottom = 0.3
+anchor_bottom = 0.6
 visible = false
+
+[node name="HelpBox" type="VBoxContainer" parent="GlossaryDrawer"]
+layout_mode = 2
+theme_override_constants/separation = 4
