@@ -8,6 +8,22 @@
       "order": 1,
       "unlock_condition": "always",
       "summary": "博物馆准备发布一份关于展品 A-17 调拨的内部报告，等待调查员核查。"
+    },
+    {
+      "case_id": "case_002",
+      "title": "过期的真相",
+      "difficulty": "medium",
+      "order": 2,
+      "unlock_condition": "prev_case_completed",
+      "summary": "博物馆 11 月调整了开放时间，一份访客指南却可能用了旧时间表。"
+    },
+    {
+      "case_id": "case_003",
+      "title": "看似合理的推断",
+      "difficulty": "medium",
+      "order": 3,
+      "unlock_condition": "prev_case_completed",
+      "summary": "线上商店促销后订单上涨，但'活动有效'这个结论可能只是推断。"
     }
   ]
 }

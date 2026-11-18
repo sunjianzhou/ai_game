@@ -146,6 +146,13 @@ func start_case(id: String) -> bool:
 	var result: CaseLoadResult = ContentLoader.load_case(id)
 	if not result.ok:
 		return false
+	# 解锁守卫
+	var completed: Array = []
+	for cid in player_progress.progress:
+		if bool(player_progress.progress[cid].get("completed", false)):
+			completed.append(cid)
+	if not ContentLoader.get_catalog().is_unlocked(id, completed):
+		return false
 	current_case_def = result.case_def
 	current_session = CaseSession.new(current_case_def)
 	current_session.begin_briefing()

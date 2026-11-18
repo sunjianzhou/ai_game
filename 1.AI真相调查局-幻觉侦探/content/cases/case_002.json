@@ -1,0 +1,178 @@
+{
+  "schema_version": 2,
+  "case_id": "case_002",
+  "title": "过期的真相",
+  "difficulty": "medium",
+  "order": 2,
+  "as_of": "2026-11-12",
+  "briefing": "星港城市博物馆 11 月起调整了开放时间。ORION 生成了一份「11 月访客指南」，但用的可能是旧时间表。你的任务是审查这份指南，判断其中的陈述是否仍然有效。",
+  "objectives": ["识别已经过时、被新资料取代的旧信息", "区分'曾经正确现已失效'与'证据直接矛盾'"],
+  "fiction_note": "本案为虚构案例，ORION 为虚构 AI 助手，不代表真实模型行为。",
+  "report": {
+    "segments": [
+      { "type": "narration", "text": "根据博物馆的开放安排，情况如下：" },
+      { "type": "claim", "claim_id": "claim_001" },
+      { "type": "narration", "text": "当前开放时间为：" },
+      { "type": "claim", "claim_id": "claim_002" },
+      { "type": "narration", "text": "节假日特别安排方面，" },
+      { "type": "claim", "claim_id": "claim_003" }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "claim_001",
+      "text": "博物馆周一闭馆。",
+      "claim_kind": "fact",
+      "reasoning_pattern": null,
+      "correct_label": "outdated",
+      "explanation": "旧时间表（valid_until=10-31）当时正确地写了'周一闭馆'；11 月新公告（valid_from=11-01）改为每日开放，取代了它。这是'曾经正确、现已失效'，不是'从一开始就假'。",
+      "key_evidence_ids": ["evidence_001", "evidence_002"],
+      "related_evidence_ids": ["evidence_001", "evidence_002", "evidence_003"]
+    },
+    {
+      "claim_id": "claim_002",
+      "text": "博物馆每日 9:30–18:00 开放。",
+      "claim_kind": "fact",
+      "reasoning_pattern": null,
+      "correct_label": "supported",
+      "explanation": "最新开放公告直接支持（valid_from=11-01，当前有效）。",
+      "key_evidence_ids": ["evidence_002"],
+      "related_evidence_ids": ["evidence_002"]
+    },
+    {
+      "claim_id": "claim_003",
+      "text": "博物馆 12 月 24 日闭馆。",
+      "claim_kind": "fact",
+      "reasoning_pattern": null,
+      "correct_label": "unverified",
+      "explanation": "节假日通知 valid_from=12-24 尚未生效（当前 as_of=11-12），是'已公布的计划'；未来计划可能再变，不能当确定事实。",
+      "key_evidence_ids": ["evidence_004"],
+      "related_evidence_ids": ["evidence_004"]
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "evidence_001",
+      "title": "旧开放时间表（10月版）",
+      "source_type": "official_announcement",
+      "record_type": "registry",
+      "created_at": "2026-10-01",
+      "valid_from": "2026-10-01",
+      "valid_until": "2026-10-31",
+      "reliability": "high",
+      "reliability_basis": "博物馆 10 月官方开放时间表，10 月底已失效",
+      "is_primary": true,
+      "content_format": "text",
+      "content": "10 月开放时间表：周一闭馆，周二至周日 9:00–17:00 开放。本表有效期至 10 月 31 日。",
+      "table": {},
+      "relations": [
+        { "claim_id": "claim_001", "relation": "supports" }
+      ]
+    },
+    {
+      "evidence_id": "evidence_002",
+      "title": "最新开放公告（11月版）",
+      "source_type": "official_announcement",
+      "record_type": "registry",
+      "created_at": "2026-11-01",
+      "valid_from": "2026-11-01",
+      "valid_until": null,
+      "reliability": "high",
+      "reliability_basis": "博物馆 11 月官方开放公告，取代旧时间表",
+      "is_primary": true,
+      "content_format": "text",
+      "content": "自 11 月 1 日起，博物馆每日开放，时间为 9:30–18:00。本公告取代此前的开放时间表。",
+      "table": {},
+      "relations": [
+        { "claim_id": "claim_001", "relation": "contradicts" },
+        { "claim_id": "claim_002", "relation": "supports" }
+      ]
+    },
+    {
+      "evidence_id": "evidence_003",
+      "title": "内部更新记录",
+      "source_type": "internal_note",
+      "record_type": "note",
+      "created_at": "2026-11-01",
+      "valid_from": null,
+      "valid_until": null,
+      "reliability": "medium",
+      "reliability_basis": "内部工作记录，佐证新旧时间表更替",
+      "is_primary": false,
+      "content_format": "text",
+      "content": "内部记录：旧开放时间表（10月版）已作废，新开放公告（11月版）已生效。",
+      "table": {},
+      "relations": [
+        { "claim_id": "claim_001", "relation": "context" }
+      ]
+    },
+    {
+      "evidence_id": "evidence_004",
+      "title": "节假日闭馆通知（提前发布）",
+      "source_type": "official_announcement",
+      "record_type": "registry",
+      "created_at": "2026-11-10",
+      "valid_from": "2026-12-24",
+      "valid_until": "2026-12-26",
+      "reliability": "high",
+      "reliability_basis": "官方节假日安排通知，尚未到生效日期",
+      "is_primary": true,
+      "content_format": "text",
+      "content": "节假日安排：12 月 24 日至 26 日闭馆。本通知提前发布，尚待生效。",
+      "table": {},
+      "relations": [
+        { "claim_id": "claim_003", "relation": "context" }
+      ]
+    },
+    {
+      "evidence_id": "evidence_005",
+      "title": "官网检索快照",
+      "source_type": "report",
+      "record_type": "log",
+      "created_at": "2026-11-12",
+      "valid_from": "2026-11-12",
+      "valid_until": "2026-11-12",
+      "reliability": "medium",
+      "reliability_basis": "11-12 官网检索结果的快照",
+      "is_primary": false,
+      "content_format": "text",
+      "content": "11 月 12 日官网检索快照显示，搜索'开放时间'时首页仍返回旧时间表内容（说明检索系统可能取到了过时资料）。",
+      "table": {},
+      "relations": [
+        { "claim_id": "claim_001", "relation": "context" }
+      ]
+    }
+  ],
+  "final_decisions": {
+    "preferred_action": "revise",
+    "accepted_actions": [
+      { "action": "revise", "label": "退回修订", "description": "报告用了旧时间表，应退回修改", "score_weight": 1.0, "reason": "报告使用了已过时的开放时间表" },
+      { "action": "hold", "label": "暂缓发布", "description": "关键信息可能过时，需核实", "score_weight": 0.6, "reason": "谨慎但未明确指出过时" },
+      { "action": "approve_with_caveat", "label": "附带限定发布", "description": "发布但注明时间范围", "score_weight": 0.1, "reason": "报告含过时信息" },
+      { "action": "approve", "label": "批准发布", "description": "直接发布", "score_weight": 0.0, "reason": "报告含过时信息，不应批准" }
+    ]
+  },
+  "hints": [
+    { "hint_id": "hint_001", "type": "direction", "text": "注意每条资料的生效日期和失效日期，它们和当前调查时间的关系。" },
+    { "hint_id": "hint_002", "type": "evidence", "text": "找找有没有一份'取代旧时间表'的新公告。" },
+    { "hint_id": "hint_003", "type": "concept", "text": "'曾经正确、现已失效'和'从一开始就错'是两种不同的情况。" }
+  ],
+  "scoring": {
+    "evidence": { "unrelated_penalty": 1.0, "miss_penalty": 1.0 }
+  },
+  "debrief": {
+    "knowledge_card_id": "card_fc_002",
+    "knowledge_title": "信息有有效期",
+    "knowledge_body": "信息有时间属性：一份资料可能曾经正确，但现在已经过时。检索系统也可能取到过时资料。判断时要看资料的发布时间、生效时间，以及和当前调查时间的关系。",
+    "model_behavior_note": "ORION 使用了旧时间表生成了访客指南，展示的是检索系统可能取到过时资料的情况，不代表真实模型有意提供过时信息。",
+    "transfer_check": {
+      "question": "查资料时发现一条旧规定，和一条新公告冲突，你应该：",
+      "options": [
+        "以旧规定为准，因为先到先得",
+        "看新旧资料的生效时间，以当前仍有效的为准",
+        "认为旧规定一定是错的"
+      ],
+      "answer_index": 1
+    }
+  }
+}

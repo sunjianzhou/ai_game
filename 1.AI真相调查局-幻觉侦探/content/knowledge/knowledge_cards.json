@@ -13,6 +13,32 @@
       "last_reviewed": "2026-11-16",
       "reviewer": "待填",
       "source_case_id": "case_001"
+    },
+    {
+      "card_id": "card_fc_002",
+      "title": "信息有有效期",
+      "category": "fact_check",
+      "icon": "icon_clock",
+      "body": "信息有时间属性：一份资料可能曾经正确，但现在已经过时。检索系统也可能取到过时资料。判断时要看资料的发布时间、生效时间，以及和当前调查时间的关系。",
+      "scope": "适用于有时间属性的信息；不表示所有检索结果都必然过时。",
+      "caveat": "'曾经正确、现已失效'和'从一开始就错'是两种不同的情况。",
+      "references": ["CONTENT_SOURCES.md#case_002"],
+      "last_reviewed": "2026-11-18",
+      "reviewer": "待填",
+      "source_case_id": "case_002"
+    },
+    {
+      "card_id": "card_fc_003",
+      "title": "相关不等于因果",
+      "category": "fact_check",
+      "icon": "icon_causation",
+      "body": "模型可能从真实数据推出未经证实的结论。'相关'（两个数字一起变化）不等于'因果'（一个导致另一个）。没有对照数据时只能说不确定，不能说'没有关系'。",
+      "scope": "适用于生成式 AI 的数据解读场景；不表示所有模型都必然如此。",
+      "caveat": "没有对照数据时，只能判断'不确定'，不能断定'无关'。",
+      "references": ["CONTENT_SOURCES.md#case_003"],
+      "last_reviewed": "2026-11-18",
+      "reviewer": "待填",
+      "source_case_id": "case_003"
     }
   ]
 }

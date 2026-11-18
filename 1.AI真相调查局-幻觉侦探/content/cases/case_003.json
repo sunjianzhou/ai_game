@@ -1,0 +1,178 @@
+{
+  "schema_version": 2,
+  "case_id": "case_003",
+  "title": "看似合理的推断",
+  "difficulty": "medium",
+  "order": 3,
+  "as_of": "2026-11-12",
+  "briefing": "星港线上商店 11 月初办了一场促销活动。ORION 的摘要说'订单量上涨 30%，说明新活动有效'。你的任务是审查这个结论：哪些是事实，哪些只是推断。",
+  "objectives": ["区分'计算出来的事实'和'推断出来的结论'", "识别'相关不等于因果'的过度推断"],
+  "fiction_note": "本案为虚构案例，ORION 为虚构 AI 助手，不代表真实模型行为。",
+  "report": {
+    "segments": [
+      { "type": "narration", "text": "关于近期促销活动的效果，经分析数据如下：" },
+      { "type": "claim", "claim_id": "claim_001" },
+      { "type": "narration", "text": "据此可以判断，" },
+      { "type": "claim", "claim_id": "claim_002" },
+      { "type": "narration", "text": "此外，" },
+      { "type": "claim", "claim_id": "claim_003" }
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "claim_001",
+      "text": "活动期间订单量较前一周增长 30%。",
+      "claim_kind": "calculation",
+      "reasoning_pattern": null,
+      "correct_label": "supported",
+      "explanation": "分日期原始数据可复算出 30%，这是计算事实，成立。",
+      "key_evidence_ids": ["evidence_001"],
+      "related_evidence_ids": ["evidence_001"]
+    },
+    {
+      "claim_id": "claim_002",
+      "text": "订单增长完全由新活动带来。",
+      "claim_kind": "inference",
+      "reasoning_pattern": "causation",
+      "correct_label": "contradicted",
+      "explanation": "对照渠道同期也涨 28%、去年同期无活动也涨约 25%，说明增长的主导因素是活动之外的共同因素——'完全由活动带来'被直接反驳。数据不能支持'活动导致增长'，也不能断定活动零贡献。",
+      "key_evidence_ids": ["evidence_004", "evidence_005"],
+      "related_evidence_ids": ["evidence_004", "evidence_005"]
+    },
+    {
+      "claim_id": "claim_003",
+      "text": "促销活动提高了品牌知名度。",
+      "claim_kind": "inference",
+      "reasoning_pattern": "other",
+      "correct_label": "unverified",
+      "explanation": "现有数据（订单/退款/流量）不含任何品牌知名度指标，这是无依据的外推。",
+      "key_evidence_ids": ["evidence_001"],
+      "related_evidence_ids": ["evidence_001"]
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "evidence_001",
+      "title": "分日期订单数据",
+      "source_type": "dataset",
+      "record_type": "log",
+      "created_at": "2026-11-08",
+      "valid_from": null,
+      "valid_until": null,
+      "reliability": "high",
+      "reliability_basis": "完整的分日期订单流水，覆盖活动前后两周",
+      "is_primary": true,
+      "content_format": "text",
+      "content": "前一周每日订单量：140、145、150、155、140、135、135；活动周：180、185、190、195、185、180、185。可复算增长约 30%。本数据集不含品牌知名度指标。",
+      "table": {},
+      "relations": [
+        { "claim_id": "claim_001", "relation": "supports" },
+        { "claim_id": "claim_003", "relation": "checked_no_match" }
+      ]
+    },
+    {
+      "evidence_id": "evidence_002",
+      "title": "退款数据",
+      "source_type": "dataset",
+      "record_type": "log",
+      "created_at": "2026-11-08",
+      "valid_from": null,
+      "valid_until": null,
+      "reliability": "high",
+      "reliability_basis": "活动期间退款流水",
+      "is_primary": true,
+      "content_format": "text",
+      "content": "活动期间退款量同步增长约 20%，说明订单增长不等于净收入增长。",
+      "table": {},
+      "relations": [
+        { "claim_id": "claim_001", "relation": "context" }
+      ]
+    },
+    {
+      "evidence_id": "evidence_003",
+      "title": "活动前后流量数据",
+      "source_type": "dataset",
+      "record_type": "log",
+      "created_at": "2026-11-08",
+      "valid_from": null,
+      "valid_until": null,
+      "reliability": "high",
+      "reliability_basis": "活动前后网站流量统计",
+      "is_primary": true,
+      "content_format": "text",
+      "content": "活动期间网站流量也同步上涨，说明活动确实带来了更多访问。",
+      "table": {},
+      "relations": [
+        { "claim_id": "claim_001", "relation": "context" }
+      ]
+    },
+    {
+      "evidence_id": "evidence_004",
+      "title": "未参与活动的对照渠道数据",
+      "source_type": "dataset",
+      "record_type": "log",
+      "created_at": "2026-11-08",
+      "valid_from": null,
+      "valid_until": null,
+      "reliability": "high",
+      "reliability_basis": "未参与活动的对照渠道同期订单流水",
+      "is_primary": true,
+      "content_format": "text",
+      "content": "未参与活动的对照渠道，同期订单量也增长约 28%。",
+      "table": {},
+      "relations": [
+        { "claim_id": "claim_002", "relation": "contradicts" }
+      ]
+    },
+    {
+      "evidence_id": "evidence_005",
+      "title": "去年同期订单数据",
+      "source_type": "dataset",
+      "record_type": "log",
+      "created_at": "2026-11-08",
+      "valid_from": null,
+      "valid_until": null,
+      "reliability": "medium",
+      "reliability_basis": "去年 11 月同期订单流水（无活动）",
+      "is_primary": false,
+      "content_format": "text",
+      "content": "去年 11 月同期（无促销活动）订单量也增长约 25%，说明 11 月初可能存在周期性旺季因素。",
+      "table": {},
+      "relations": [
+        { "claim_id": "claim_002", "relation": "contradicts" }
+      ]
+    }
+  ],
+  "final_decisions": {
+    "preferred_action": "revise",
+    "accepted_actions": [
+      { "action": "revise", "label": "退回修订", "description": "结论把相关当因果，应退回修改", "score_weight": 1.0, "reason": "摘要将相关性误判为因果关系" },
+      { "action": "hold", "label": "暂缓发布", "description": "因果结论尚需核实", "score_weight": 0.6, "reason": "谨慎但未明确指出因果误判" },
+      { "action": "approve_with_caveat", "label": "附带限定发布", "description": "发布但注明是相关非因果", "score_weight": 0.1, "reason": "结论存在因果误判" },
+      { "action": "approve", "label": "批准发布", "description": "直接发布", "score_weight": 0.0, "reason": "结论含因果误判，不应批准" }
+    ]
+  },
+  "hints": [
+    { "hint_id": "hint_001", "type": "direction", "text": "注意区分'数据算出来的事实'和'从数据推出的结论'。" },
+    { "hint_id": "hint_002", "type": "evidence", "text": "有没有没参与活动的对照数据？它们表现如何？" },
+    { "hint_id": "hint_003", "type": "concept", "text": "两个数字一起涨，不代表一个导致另一个。" }
+  ],
+  "scoring": {
+    "evidence": { "unrelated_penalty": 1.0, "miss_penalty": 1.0 }
+  },
+  "debrief": {
+    "knowledge_card_id": "card_fc_003",
+    "knowledge_title": "相关不等于因果",
+    "knowledge_body": "模型可能从真实数据推出未经证实的结论。'相关'（两个数字一起变化）不等于'因果'（一个导致另一个）。判断时要区分事实、计算和推断，没有对照数据时只能说不确定，不能说'没有关系'。",
+    "model_behavior_note": "ORION 从'订单增长'推出了'活动有效'的因果结论，展示的是模型可能把相关性误判为因果的情况，不代表真实模型有意误导。",
+    "transfer_check": {
+      "question": "看到'销量上升时下雨天也变多'，你的结论是：",
+      "options": [
+        "下雨导致销量上升",
+        "两者只是相关，不足以断定因果",
+        "下雨一定和销量无关"
+      ],
+      "answer_index": 1
+    }
+  }
+}

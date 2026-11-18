@@ -1,7 +1,7 @@
 # 场景冒烟：instantiate 各场景，断言关键节点存在（不触发 _ready，故只查静态节点）
 static func run(_tree: SceneTree) -> Array[String]:
 	var f: Array[String] = []
-	_check(f, "res://scenes/case_select/case_select.tscn", ["CaseCard"])
+	_check(f, "res://scenes/case_select/case_select.tscn", ["CaseList", "BackButton"])
 	_check(f, "res://scenes/briefing/briefing.tscn", ["StartButton", "CalibrationStep"])
 	_check(f, "res://scenes/investigation/investigation_desk.tscn", ["ReportRichText", "ClaimPips", "EvidenceList", "JudgementBar", "JudgeSupported", "JudgeContradicted", "JudgeUnverified", "JudgeOutdated", "HintButton", "SubmitButton", "FooterBadge", "GlossaryDrawer"])
 	_check(f, "res://scenes/verdict/final_verdict.tscn", ["ReviseButton", "HoldButton", "CaveatButton", "ApproveButton"])
