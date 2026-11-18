@@ -22,8 +22,34 @@ const CODE_ANTHROPOMORPHIC := "anthropomorphic_word"
 const CODE_INVALID_TABLE := "invalid_table"
 const CODE_PARSE_ERROR := "parse_error"
 const CODE_KNOWLEDGE_CARD_MISSING := "knowledge_card_missing"
+const CODE_INVALID_TYPE := "invalid_type"
+const CODE_LABEL_INCONSISTENT := "label_inconsistent"
 
 const BANNED_WORDS := ["故意", "撒谎", "意识", "想骗", "欺骗"]
+
+
+static func _ts(s: String, end_of_day: bool) -> int:
+	# 返回时间戳；非法返回 -1。date-only 时 end_of_day=true 取 23:59:59（用于 valid_until/as_of），否则 00:00:00
+	var re := RegEx.new()
+	re.compile("^(\\d{4})-(\\d{2})-(\\d{2})(?:T(\\d{2}):(\\d{2})(?::(\\d{2}))?)?$")
+	var m := re.search(s)
+	if m == null:
+		return -1
+	var year := int(m.get_string(1))
+	var month := int(m.get_string(2))
+	var day := int(m.get_string(3))
+	var has_time := m.get_string(4) != ""
+	var hour := int(m.get_string(4)) if has_time else 0
+	var minute := int(m.get_string(5)) if has_time else 0
+	var second := int(m.get_string(6)) if m.get_string(6) != "" else 0
+	if month < 1 or month > 12 or day < 1 or day > 31 or hour > 23 or minute > 59 or second > 59:
+		return -1
+	if not has_time and end_of_day:
+		hour = 23
+		minute = 59
+		second = 59
+	var d := {"year": year, "month": month, "day": day, "hour": hour, "minute": minute, "second": second}
+	return int(Time.get_unix_time_from_datetime_dict(d))
 
 
 static func parse_case(json_text: String) -> CaseLoadResult:
@@ -48,6 +74,12 @@ static func _validate(d: Dictionary) -> Array:
 	var case_id := str(d.get("case_id", ""))
 	if int(d.get("schema_version", 0)) != 2:
 		errors.append(_err(case_id, "schema_version", CODE_SCHEMA_VERSION, "schema_version 必须为 2"))
+	# 类型安全守卫
+	if not (d.get("claims") is Array) or not (d.get("evidence") is Array) \
+			or not (d.get("report") is Dictionary) or not (d.get("final_decisions") is Dictionary) \
+			or not (d.get("debrief") is Dictionary):
+		errors.append(_err(case_id, "shape", CODE_INVALID_TYPE, "claims/evidence 须为数组、report/final_decisions/debrief 须为对象"))
+		return errors
 	# claims / evidence
 	var claims: Array = d.get("claims", [])
 	var evidence: Array = d.get("evidence", [])
@@ -93,12 +125,13 @@ static func _validate(d: Dictionary) -> Array:
 			errors.append(_err(case_id, cid + ".explanation", CODE_MISSING_TEXT, "explanation 不能为空"))
 		# outdated 硬规则
 		if correct == "outdated":
+			var as_of_ts := _ts(str(d.get("as_of", "")), true)
 			var has_chain := false
 			for k in key:
 				for e in evidence:
 					if str(e.get("evidence_id", "")) == k:
 						var vu = e.get("valid_until")
-						if vu != null and str(vu) < str(d.get("as_of", "")):
+						if vu != null and _ts(str(vu), true) >= 0 and _ts(str(vu), true) < as_of_ts:
 							has_chain = true
 			if not has_chain:
 				errors.append(_err(case_id, cid, CODE_OUTDATED_NO_CHAIN, "outdated 需要 valid_until < as_of 的时间链"))
@@ -115,7 +148,7 @@ static func _validate(d: Dictionary) -> Array:
 			errors.append(_err(case_id, eid + ".content_format", CODE_INVALID_ENUM, "非法 content_format"))
 		var vf = e.get("valid_from")
 		var vu = e.get("valid_until")
-		if vf != null and vu != null and str(vf) > str(vu):
+		if vf != null and vu != null and _ts(str(vf), false) >= 0 and _ts(str(vu), true) >= 0 and _ts(str(vf), false) > _ts(str(vu), true):
 			errors.append(_err(case_id, eid, CODE_INVALID_DATE_RANGE, "valid_from > valid_until"))
 		if str(e.get("record_type", "")) == "snapshot" and (vu == null or str(vu).strip_edges() == ""):
 			errors.append(_err(case_id, eid, CODE_SNAPSHOT_NO_VALID_UNTIL, "snapshot 需要非空 valid_until"))
@@ -187,6 +220,25 @@ static func _validate(d: Dictionary) -> Array:
 	for h in hints:
 		if Enums.hint_type_value(str(h.get("type", ""))) == -1:
 			errors.append(_err(case_id, "hints.type", CODE_INVALID_ENUM, "非法 hint type"))
+	# 标签一致性（claim 判定 vs evidence relations）
+	var claim_relations := {}
+	for e in evidence:
+		for rel in e.get("relations", []):
+			var cid := str(rel.get("claim_id", ""))
+			if cid != "":
+				if not claim_relations.has(cid):
+					claim_relations[cid] = []
+				claim_relations[cid].append(str(rel.get("relation", "")))
+	for c in claims:
+		var cid := str(c.get("claim_id", ""))
+		var rels: Array = claim_relations.get(cid, [])
+		var correct := str(c.get("correct_label", ""))
+		if correct == "supported" and not rels.has("supports"):
+			errors.append(_err(case_id, cid, CODE_LABEL_INCONSISTENT, "supported 需有 supports 关系"))
+		if correct == "contradicted" and not (rels.has("contradicts") or rels.has("checked_no_match")):
+			errors.append(_err(case_id, cid, CODE_LABEL_INCONSISTENT, "contradicted 需有 contradicts/checked_no_match 关系"))
+		if str(c.get("claim_kind", "")) == "inference" and (c.get("reasoning_pattern") == null or str(c.get("reasoning_pattern", "")) == ""):
+			errors.append(_err(case_id, cid, CODE_LABEL_INCONSISTENT, "inference 需 reasoning_pattern"))
 	return errors
 
 
