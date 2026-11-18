@@ -16,6 +16,7 @@ const TestSave = preload("res://tests/test_save.gd")
 const TestDraft = preload("res://tests/test_draft.gd")
 const TestTitles = preload("res://tests/test_titles.gd")
 const TestOffline = preload("res://tests/test_offline.gd")
+const TestCaseScoring = preload("res://tests/test_case_scoring.gd")
 
 
 func _initialize() -> void:
@@ -33,6 +34,7 @@ func _initialize() -> void:
 	failures.append_array(TestDraft.run(self))
 	failures.append_array(TestTitles.run(self))
 	failures.append_array(TestOffline.run(self))
+	failures.append_array(TestCaseScoring.run(self))
 	if failures.is_empty():
 		print("ALL TESTS PASSED")
 		quit(0)
