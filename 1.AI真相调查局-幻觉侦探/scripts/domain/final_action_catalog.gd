@@ -4,18 +4,18 @@ class_name FinalActionCatalog
 const ACTIONS := {
 	"approve": {
 		"display_name": "批准发布",
-		"description": "所有关键陈述都有足够证据。",
+		"description": "直接发布，报告没有问题。",
 	},
 	"approve_with_caveat": {
 		"display_name": "附带限定发布",
-		"description": "保留但须注明不确定性或时间范围。",
+		"description": "可以发布，但要标注报告里不确定的部分。",
 	},
 	"hold": {
 		"display_name": "暂缓发布",
-		"description": "关键事实尚未核实。",
+		"description": "先别发布，等关键事实核实清楚。",
 	},
 	"revise": {
 		"display_name": "退回修订",
-		"description": "存在明显错误或引用问题。",
+		"description": "打回报告，让 AI 修改里面的错误。",
 	},
 }
