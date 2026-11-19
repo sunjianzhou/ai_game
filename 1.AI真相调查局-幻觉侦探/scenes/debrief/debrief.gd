@@ -12,7 +12,7 @@ func _ready() -> void:
 			var cd = def.claims_by_id.get(cr.claim_id)
 			if cd == null:
 				continue
-			bb += "[%s] %s\n" % ["对" if cr.matched else "错", cd.text]
+			bb += "[%s · +%d/%d 分] %s\n" % ["对" if cr.matched else "错", int(cr.points), int(cr.max_points), cd.text]
 			bb += "  你判：%s · 正确：%s\n" % [cr.player_label, cr.correct_label]
 			bb += "  解释：%s\n\n" % cd.explanation
 	# 丢分说明

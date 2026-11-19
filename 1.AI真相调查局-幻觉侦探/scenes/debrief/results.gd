@@ -6,7 +6,7 @@ func _ready() -> void:
 	if r != null:
 		var b: Dictionary = r.breakdown
 		$Center/VBoxContainer/TotalLabel.text = "总分：%d / 100" % r.total
-		$Center/VBoxContainer/BreakdownLabel.text = "判定 %d + 证据 %d + 动作 %d" % [int(b.get("accuracy", 0.0)), int(b.get("evidence", 0.0)), int(b.get("final_action", 0.0))]
+		$Center/VBoxContainer/BreakdownLabel.text = "判定 %d/60 · 证据 %d/30 · 动作 %d/10" % [int(b.get("accuracy", 0.0)), int(b.get("evidence", 0.0)), int(b.get("final_action", 0.0))]
 		$Center/VBoxContainer/HintPenaltyLabel.text = "提示扣分：%d" % int(r.hint_penalty)
 		var chosen := str(r.final_action_detail.get("action", ""))
 		var chosen_name := str(FinalActionCatalog.ACTIONS.get(chosen, {}).get("display_name", chosen))

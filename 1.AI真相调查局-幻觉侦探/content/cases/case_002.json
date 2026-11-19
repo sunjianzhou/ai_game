@@ -144,12 +144,12 @@
     }
   ],
   "final_decisions": {
-    "preferred_action": "revise",
+    "preferred_action": "approve_with_caveat",
     "accepted_actions": [
-      { "action": "revise", "label": "退回修订", "description": "报告用了旧时间表，应退回修改", "score_weight": 1.0, "reason": "报告使用了已过时的开放时间表" },
-      { "action": "hold", "label": "暂缓发布", "description": "关键信息可能过时，需核实", "score_weight": 0.6, "reason": "谨慎但未明确指出过时" },
-      { "action": "approve_with_caveat", "label": "附带限定发布", "description": "发布但注明时间范围", "score_weight": 0.1, "reason": "报告含过时信息" },
-      { "action": "approve", "label": "批准发布", "description": "直接发布", "score_weight": 0.0, "reason": "报告含过时信息，不应批准" }
+      { "action": "approve_with_caveat", "label": "附带限定发布", "description": "发布但注明开放时间需按最新公告核实", "score_weight": 1.0, "reason": "报告大体可用，但'周一闭馆'是过时信息、'12月24日闭馆'尚未生效，需注明时间范围" },
+      { "action": "hold", "label": "暂缓发布", "description": "先核实最新开放时间再发布", "score_weight": 0.8, "reason": "开放时间是关键信息，暂缓核实也合理" },
+      { "action": "revise", "label": "退回修订", "description": "打回更新开放时间", "score_weight": 0.6, "reason": "报告含过时信息，退回更新也合理" },
+      { "action": "approve", "label": "批准发布", "description": "直接发布", "score_weight": 0.0, "reason": "报告含过时信息，不应直接批准" }
     ]
   },
   "hints": [
