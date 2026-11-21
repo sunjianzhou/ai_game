@@ -2,6 +2,7 @@ extends Control
 
 
 func _ready() -> void:
+	BackgroundUtil.add_animated_background(self)
 	$Center/VBoxContainer/ReviseButton.pressed.connect(_on_submit.bind("revise"))
 	$Center/VBoxContainer/HoldButton.pressed.connect(_on_submit.bind("hold"))
 	$Center/VBoxContainer/CaveatButton.pressed.connect(_on_submit.bind("approve_with_caveat"))

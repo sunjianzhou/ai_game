@@ -14,6 +14,7 @@ var _evidence_buttons: Dictionary = {}   # evidence_id -> Button
 
 
 func _ready() -> void:
+	BackgroundUtil.add_animated_background(self)
 	$Margin/VBox/JudgementBar/JudgeSupported.pressed.connect(_on_judge.bind("supported"))
 	$Margin/VBox/JudgementBar/JudgeContradicted.pressed.connect(_on_judge.bind("contradicted"))
 	$Margin/VBox/JudgementBar/JudgeUnverified.pressed.connect(_on_judge.bind("unverified"))

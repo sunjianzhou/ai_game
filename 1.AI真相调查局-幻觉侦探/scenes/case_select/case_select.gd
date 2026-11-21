@@ -2,6 +2,7 @@ extends Control
 
 
 func _ready() -> void:
+	BackgroundUtil.add_animated_background(self)
 	$Center/VBoxContainer/BackButton.pressed.connect(_on_back)
 	_render()
 

@@ -2,10 +2,12 @@ extends Control
 
 
 func _ready() -> void:
+	BackgroundUtil.add_animated_background(self)
 	var r = GameFlow.current_result
 	if r != null:
 		var b: Dictionary = r.breakdown
 		$Center/VBoxContainer/TotalLabel.text = "总分：%d / 100" % r.total
+		$Center/VBoxContainer/RatingLabel.text = "评级：%s" % _rating(r.total)
 		$Center/VBoxContainer/BreakdownLabel.text = "判定 %d/60 · 证据 %d/30 · 动作 %d/10" % [int(b.get("accuracy", 0.0)), int(b.get("evidence", 0.0)), int(b.get("final_action", 0.0))]
 		$Center/VBoxContainer/HintPenaltyLabel.text = "提示扣分：%d" % int(r.hint_penalty)
 		var chosen := str(r.final_action_detail.get("action", ""))
@@ -27,3 +29,13 @@ func _ready() -> void:
 func _on_debrief() -> void:
 	if GameFlow.begin_debrief():
 		GameFlow.goto(GameFlow.Page.DEBRIEF)
+
+
+func _rating(total: int) -> String:
+	if total >= 95:
+		return "S · 优秀"
+	if total >= 85:
+		return "A · 良好"
+	if total >= 70:
+		return "B · 合格"
+	return "C · 待加强"

@@ -2,6 +2,7 @@ extends Control
 
 
 func _ready() -> void:
+	BackgroundUtil.add_animated_background(self)
 	var def = GameFlow.current_case_def
 	var result = GameFlow.current_result
 	var bb := ""

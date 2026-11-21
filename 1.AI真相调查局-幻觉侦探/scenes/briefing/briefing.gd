@@ -2,6 +2,7 @@ extends Control
 
 
 func _ready() -> void:
+	BackgroundUtil.add_animated_background(self)
 	$Margin/VBoxContainer/StartButton.pressed.connect(_on_start)
 	var def = GameFlow.current_case_def
 	if def != null:
